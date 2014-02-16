@@ -40,7 +40,6 @@ class Product(models.Model):
 class Sale(models.Model):
     product = models.ForeignKey(Product)
     user = models.CharField(max_length=255, blank=True , null=True)
-    price = models.CharField(max_length=255, blank=True , null=True)
-    quantity = models.CharField(max_length=255, blank=True , null=True)
+    price = models.FloatField(default=0)
+    quantity = models.IntegerField(default=0)
     time = models.CharField(max_length=255, blank=True , null=True)
-    user = models.CharField(max_length=255, blank=True , null=True)
