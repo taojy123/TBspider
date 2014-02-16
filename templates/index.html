@@ -1,0 +1,63 @@
+<!doctype html>
+
+<html>
+
+<head>
+    <title>淘宝销量爬虫</title>
+
+    <link rel="stylesheet" href="/static/css/pure-min.css">
+    <link rel="stylesheet" href="/static/css/baby-blue.css">
+    <link rel="stylesheet" href="/static/css/tablesorter/blue/style.css" type="text/css" media="print, projection, screen" />
+    <script type="text/javascript" src="/static/js/jquery-1.4.3.min.js"></script>
+    <script type="text/javascript" src="/static/js/jquery.tablesorter.js"></script>
+    <script type="text/javascript">
+        $(function(){
+            //表格显示
+            $("#myTable").tablesorter({
+                widgets: ['zebra']
+            })
+
+            $("#index").addClass("pure-menu-selected")
+        })
+    </script>
+
+
+
+</head>
+
+<body>
+
+<div class="pure-g-r" id="layout" style="letter-spacing:0">
+
+    {% include "menu.html" %}
+
+    <div  id="right">
+
+        <div class="header">
+            <h1>数据采集</h1>
+        </div>
+
+        <div id="content" style="text-align: center;margin-top: 30px" >
+            <form action="/collect/" method="post" onsubmit="$('#waiting').show()">
+                <textarea name="urls" style="width: 600px; height: 300px" id="urls">
+http://item.taobao.com/item.htm?spm=a1z10.3.w4002-4896530536.36.BoC6nZ&id=18403871733
+http://item.taobao.com/item.htm?spm=a1z10.3.w4002-4896530536.34.BoC6nZ&id=18403991119,aaa
+                </textarea>
+                <br/>
+                <br/>
+                <input type="submit"  class="pure-button pure-button-primary" value="开始采集"/>
+            </form>
+
+            <img src="/static/images/waiting.gif" id="waiting" style="display: none"/>
+
+        </div>
+    </div>
+
+
+</div>
+
+
+
+</body>
+
+</html>
