@@ -8,6 +8,7 @@ from models import *
 import os
 import uuid
 import BeautifulSoup
+import time
 
 def index(request):
     return render_to_response('index.html', locals())
@@ -73,11 +74,27 @@ def collect(request):
                     s.time = time
                     s.save()
 
-    return HttpResponse("ok")
+    return HttpResponseRedirect("/view")
 
 
 
 def view(request):
+    submit = request.REQUEST.get("submit")
+    tags = request.REQUEST.get("tags", "")
+    times = request.REQUEST.get("times", "")
+    if submit:
+        if times:
+            start, end = times.split("/")
+        else:
+            start, end = None, None
+
+        ts = tags.split()
+        pds = Product.objects.all()
+        for tag in ts:
+            pds = pds.filter(tag__icontains=tag)
+        for pd in pds:
+            pd.data = pd.get_data(start, end)
+
     return render_to_response('view.html', locals())
 
 

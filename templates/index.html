@@ -38,18 +38,15 @@
         </div>
 
         <div id="content" style="text-align: center;margin-top: 30px" >
-            <form action="/collect/" method="post" onsubmit="$('#waiting').show()">
-                <textarea name="urls" style="width: 600px; height: 300px" id="urls">
-http://item.taobao.com/item.htm?spm=a1z10.3.w4002-4896530536.36.BoC6nZ&id=18403871733
-http://item.taobao.com/item.htm?spm=a1z10.3.w4002-4896530536.34.BoC6nZ&id=18403991119,aaa
+            <form action="/collect/" method="post">
+                <textarea name="urls" style="width: 900px; height: 300px" id="urls">
+http://item.taobao.com/item.htm?spm=a1z10.3.w4002-4896530536.36.BoC6nZ&id=18403871733,AAA,鼠标 电子设备
+http://item.taobao.com/item.htm?spm=a1z10.3.w4002-4896530536.34.BoC6nZ&id=18403991119,BBB,键盘 电子设备
                 </textarea>
                 <br/>
                 <br/>
                 <input type="submit"  class="pure-button pure-button-primary" value="开始采集"/>
             </form>
-
-            <img src="/static/images/waiting.gif" id="waiting" style="display: none"/>
-
         </div>
     </div>
 

@@ -35,6 +35,27 @@ class Product(models.Model):
         return collect_url
 
 
+    def get_sales(self, start=None, end=None):
+        sales = Sale.objects.filter(product=self)
+        result = sales
+        if start and end:
+            result = []
+            for s in sales:
+                if s.time > start and s.time < end:
+                    result.append(s)
+        return result
+
+    def get_data(self, start=None, end=None):
+        sales = self.get_sales(start, end)
+        total_user = len(sales)
+        total_quantity = 0
+        total_price = 0
+        for s in sales:
+            total_quantity += s.quantity
+            total_price += s.price * s.quantity
+        return total_user, total_quantity, total_price
+
+
 
 
 class Sale(models.Model):

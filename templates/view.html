@@ -1,0 +1,106 @@
+﻿<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>淘宝销量爬虫</title>
+    <link rel="stylesheet" href="/static/css/pure-min.css">
+    <link rel="stylesheet" href="/static/css/baby-blue.css">
+    <link rel="stylesheet" href="/static/css/tablesorter/blue/style.css" type="text/css" media="print, projection, screen" />
+    <script type="text/javascript" src="/static/js/jquery-1.4.3.min.js"></script>
+    <script type="text/javascript" src="/static/js/jquery.tablesorter.js"></script>
+    <script type="text/javascript">
+        /* <![CDATA[*/
+        $(function(){
+            //表格显示
+            $("#myTable").tablesorter({
+                widgets: ['zebra']
+            })
+
+            $("#view").addClass("pure-menu-selected")
+
+        })
+        /*]]>*/
+    </script>
+</head>
+
+<body>
+
+
+<div class="pure-g-r" id="layout" style="letter-spacing:0">
+
+    {% include "menu.html" %}
+
+
+    <div id="right">
+
+        <div class="header">
+            <h1>数据查询</h1>
+        </div>
+
+
+        <div id="content" style="text-align: center;margin-top: 30px">
+
+            <form action="/view/" class="pure-form" style="margin-bottom: 30px">
+                <input type="text" name="tags" placeholder="标签"/>
+                <input type="text" name="times" placeholder="2014-02-14/2014-02-15" />
+                <input type="submit" class="pure-button pure-button-primary" name="submit" value="查询" />
+            </form>
+
+            <label>
+                {{ tags }}
+                {{ times }}
+            </label>
+
+            <table id="myTable" class="tablesorter" style="border-collapse: separate; border-spacing:1px;">
+
+                <thead>
+                <tr>
+                    <th>地址</th>
+                    <th>别名</th>
+                    <th>标签</th>
+                    <th>购买人数</th>
+                    <th>产品销售数量</th>
+                    <th>成交金额</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                {% for pd in pds %}
+                    <tr>
+                        <td>
+                            {{ pd.url }}
+                        </td>
+                        <td>
+                            {{ pd.name }}
+                        </td>
+                        <td>
+                            {{ pd.tag }}
+                        </td>
+                        <td>
+                            {{ pd.data.0 }}
+                        </td>
+                        <td>
+                            {{ pd.data.1 }}
+                        </td>
+                        <td>
+                            {{ pd.data.2 }}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+
+</body>
+
+</html>
