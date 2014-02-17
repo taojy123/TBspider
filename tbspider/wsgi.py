@@ -17,11 +17,11 @@ framework.
 import os
 import sys
 
-path = os.path.dirname(__file__)
-path = path.replace(r"\tbspider", "", 1).replace(r"/tbspider", "", 1)
-os.chdir(path)
-sys.path.append(path)
-print os.getcwd()
+#path = os.path.dirname(__file__)
+#path = path.replace(r"\tbspider", "", 1).replace(r"/tbspider", "", 1)
+#os.chdir(path)
+#sys.path.append(path)
+#print os.getcwd()
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "tbspider.settings")
 
