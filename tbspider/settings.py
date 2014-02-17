@@ -1,7 +1,6 @@
 
 # Django settings for tbspider project.
 import os
-import uuid
 
 DEBUG = True
 TEMPLATE_DEBUG = DEBUG

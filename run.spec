@@ -1,17 +1,14 @@
 # -*- mode: python -*-
-a = Analysis(['run.py'],
-             pathex=['E:\\workspace\\GitHub\\TBspider'],
-             hiddenimports=[],
-             hookspath=None,
-             runtime_hooks=None)
+a = Analysis([os.path.join(HOMEPATH,'support\\_mountzlib.py'), os.path.join(HOMEPATH,'support\\useUnicode.py'), 'run.py'],
+             pathex=['E:\\Workspace\\GitHub\\TBspider'])
 pyz = PYZ(a.pure)
-exe = EXE(pyz,
+exe = EXE( pyz,
           a.scripts,
           a.binaries,
           a.zipfiles,
           a.datas,
-          name='run.exe',
+          name=os.path.join('dist', 'run.exe'),
           debug=False,
-          strip=None,
+          strip=False,
           upx=True,
           console=True )
