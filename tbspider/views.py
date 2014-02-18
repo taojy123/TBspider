@@ -103,8 +103,13 @@ def view(request):
         pds = Product.objects.all()
         for tag in ts:
             pds = pds.filter(tag__icontains=tag)
+
+        total_sum = [0, 0, 0]
         for pd in pds:
             pd.data = pd.get_data(start, end)
+            total_sum[0] += pd.data[0]
+            total_sum[1] += pd.data[1]
+            total_sum[2] += pd.data[2]
 
     return render_to_response('view.html', locals())
 
