@@ -15,6 +15,7 @@ def index(request):
 
 def collect(request):
     urls = request.REQUEST.get("urls", "")
+    repeat = request.REQUEST.get("repeat", "")
     for line in urls.split("\n"):
         print line
         line = line.strip()
@@ -60,9 +61,9 @@ def collect(request):
                 user = tr.find("td", "tb-buyer").getText()
                 price = float(tr.find("em", "tb-rmb-num").getText())
                 quantity = int(tr.find("td", "tb-amount").getText())
-                time = tr.find("td", "tb-start").getText()
+                stime = tr.find("td", "tb-start").getText()
 
-                if Sale.objects.filter(product=pd).filter(user=user).filter(time=time):
+                if Sale.objects.filter(product=pd).filter(user=user).filter(time=stime):
                     break_flag = True
                     break
                 else:
@@ -71,8 +72,14 @@ def collect(request):
                     s.user = user
                     s.price = price
                     s.quantity = quantity
-                    s.time = time
+                    s.time = stime
                     s.save()
+
+    if repeat:
+        current_url = request.get_full_path()
+        time.sleep(int(repeat) * 60)
+        print "repeat"
+        return HttpResponseRedirect(current_url)
 
     return HttpResponseRedirect("/view")
 
