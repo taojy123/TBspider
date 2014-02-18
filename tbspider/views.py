@@ -17,63 +17,67 @@ def collect(request):
     urls = request.REQUEST.get("urls", "")
     repeat = request.REQUEST.get("repeat", "")
     for line in urls.split("\n"):
-        print line
-        line = line.strip()
-        if not line:
-            continue
-        items = (line + ",,,").split(",")
-        url = items[0]
-        name = items[1]
-        tag = items[2]
+        try:
+            print line
+            line = line.strip()
+            if not line:
+                continue
+            items = (line + ",,,").split(",")
+            url = items[0]
+            name = items[1]
+            tag = items[2]
 
-        if Product.objects.filter(url=url):
-            pd = Product.objects.filter(url=url)[0]
-            pd.name = name
-            pd.tag = tag
-            pd.save()
-        else:
-            pd = Product()
-            pd.url = url
-            pd.name = name
-            pd.tag = tag
-            pd.save()
+            if Product.objects.filter(url=url):
+                pd = Product.objects.filter(url=url)[0]
+                pd.name = name
+                pd.tag = tag
+                pd.save()
+            else:
+                pd = Product()
+                pd.url = url
+                pd.name = name
+                pd.tag = tag
+                pd.save()
 
-        collect_url = pd.collect_url()
-        break_flag = False
-        for page_num in range(1,6):
-            if break_flag:
-                break
-
-            link = collect_url[:-1] + str(page_num)
-            print link
-
-            p = urllib2.urlopen(link).read()
-            i = p.find('{html:"') + 7
-            j = p.find('",type:"list"}')
-            p = p[i:j].replace(r'\"', r'"')
-            soup = BeautifulSoup.BeautifulSoup(p)
-            tbody = soup.find("tbody")
-            trs = tbody.findAll("tr")
-            for tr in trs:
-                if not tr.find("td", "tb-buyer"):
-                    continue
-
-                user = tr.find("td", "tb-buyer").getText()
-                price = float(tr.find("em", "tb-rmb-num").getText())
-                quantity = int(tr.find("td", "tb-amount").getText())
-                stime = tr.find("td", "tb-start").getText()
-
-                if Sale.objects.filter(product=pd).filter(user=user).filter(time=stime):
-                    break_flag = True
+            collect_url = pd.collect_url()
+            break_flag = False
+            for page_num in range(1,6):
+                if break_flag:
                     break
-                else:
-                    s = Sale()
-                    s.product = pd
-                    s.user = user
-                    s.price = price
-                    s.quantity = quantity
-                    s.time = stime
-                    s.save()
+
+                link = collect_url[:-1] + str(page_num)
+                print link
+
+                p = urllib2.urlopen(link).read()
+                i = p.find('{html:"') + 7
+                j = p.find('",type:"list"}')
+                p = p[i:j].replace(r'\"', r'"')
+                soup = BeautifulSoup.BeautifulSoup(p)
+                tbody = soup.find("tbody")
+                trs = tbody.findAll("tr")
+                for tr in trs:
+                    if not tr.find("td", "tb-buyer"):
+                        continue
+
+                    user = tr.find("td", "tb-buyer").getText()
+                    price = float(tr.find("em", "tb-rmb-num").getText())
+                    quantity = int(tr.find("td", "tb-amount").getText())
+                    stime = tr.find("td", "tb-start").getText()
+
+                    if Sale.objects.filter(product=pd).filter(user=user).filter(time=stime):
+                        break_flag = True
+                        break
+                    else:
+                        s = Sale()
+                        s.product = pd
+                        s.user = user
+                        s.price = price
+                        s.quantity = quantity
+                        s.time = stime
+                        s.save()
+
+        except:
+            print "quit:", line
 
     if repeat:
         current_url = request.get_full_path()
