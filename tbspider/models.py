@@ -36,7 +36,7 @@ class Product(models.Model):
 
 
     def get_sales(self, start=None, end=None):
-        sales = Sale.objects.filter(product=self)
+        sales = Sale.objects.filter(product=self).order_by("-time")
         result = sales
         if start and end:
             result = []

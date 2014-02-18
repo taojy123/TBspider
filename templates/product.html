@@ -1,0 +1,102 @@
+﻿<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>淘宝销量爬虫</title>
+    <link rel="stylesheet" href="/static/css/pure-min.css">
+    <link rel="stylesheet" href="/static/css/baby-blue.css">
+    <link rel="stylesheet" href="/static/css/tablesorter/blue/style.css" type="text/css" media="print, projection, screen" />
+    <script type="text/javascript" src="/static/js/jquery-1.4.3.min.js"></script>
+    <script type="text/javascript" src="/static/js/jquery.tablesorter.js"></script>
+    <script type="text/javascript">
+        /* <![CDATA[*/
+        $(function(){
+            //表格显示
+            $("#myTable").tablesorter({
+                widgets: ['zebra']
+            })
+
+            $("#product").addClass("pure-menu-selected")
+
+        })
+        /*]]>*/
+    </script>
+</head>
+
+<body>
+
+
+<div class="pure-g-r" id="layout" style="letter-spacing:0">
+
+    {% include "menu.html" %}
+
+
+    <div id="right">
+
+        <div class="header">
+            <h1>产品查询</h1>
+        </div>
+
+
+        <div id="content" style="text-align: center;margin-top: 30px">
+
+            <form action="/product/" class="pure-form" style="margin-bottom: 30px">
+                <input type="text" name="name" placeholder="输入产品名称或网址"/>
+                <input type="submit" class="pure-button pure-button-primary" name="submit" value="查询" />
+            </form>
+
+            <p>
+                <label>{{ pd.name }}</label>
+            </p>
+            <p>
+                <label>{{ pd.url }}</label>
+            </p>
+            <p>
+                <label>{{ pd.tag }}</label>
+            </p>
+
+            <table id="myTable" class="tablesorter" style="border-collapse: separate; border-spacing:1px;">
+
+                <thead>
+                <tr>
+                    <th>买家</th>
+                    <th>拍下价格</th>
+                    <th>数量</th>
+                    <th>付款时间</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                {% for s in sales %}
+                    <tr>
+                        <td>
+                            {{ s.user }}
+                        </td>
+                        <td>
+                            {{ s.price }}
+                        </td>
+                        <td>
+                            {{ s.quantity }}
+                        </td>
+                        <td>
+                            {{ s.time }}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+
+</body>
+
+</html>

@@ -98,3 +98,21 @@ def view(request):
     return render_to_response('view.html', locals())
 
 
+
+
+def product(request):
+    submit = request.REQUEST.get("submit")
+    name = request.REQUEST.get("name", "")
+    if submit:
+        pd = Product.objects.filter(name=name)
+        if not pd:
+            pd = Product.objects.filter(name__icontains=name)
+        if not pd:
+            pd = Product.objects.filter(url=name)
+        if pd:
+            pd = pd[0]
+            sales = pd.get_sales()
+
+    return render_to_response('product.html', locals())
+
+
