@@ -12,11 +12,11 @@ import re
 
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "tbspider.settings")
 #these pertain to your application
-#import tbspider.wsgi
-#import tbspider.urls
-#import tbspider.settings
-#import tbspider.models
-#import tbspider.views
+import tbspider.views
+import tbspider.wsgi
+import tbspider.urls
+import tbspider.settings
+import tbspider.models
 
 import django.contrib.auth
 import django.contrib.contenttypes
