@@ -83,9 +83,13 @@ def collect(request):
         current_url = request.get_full_path()
         time.sleep(int(repeat) * 60)
         print "repeat"
-        return HttpResponseRedirect(current_url)
+        rp = HttpResponseRedirect(current_url)
+        rp.set_cookie("urls", urls.encode("utf8"), 3600*24*30)
+        return rp
 
-    return HttpResponseRedirect("/view")
+    rp = HttpResponseRedirect("/view")
+    rp.set_cookie("urls", urls.encode("utf8"), 3600*24*30)
+    return rp
 
 
 
