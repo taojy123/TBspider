@@ -9,6 +9,8 @@ import os
 import uuid
 import BeautifulSoup
 import time
+import csv
+
 
 def index(request):
     return render_to_response('index.html', locals())
@@ -134,5 +136,39 @@ def product(request):
             sales = pd.get_sales()
 
     return render_to_response('product.html', locals())
+
+
+
+
+def load_view(request):
+    tags = request.REQUEST.get("tags", "")
+    times = request.REQUEST.get("times", "")
+
+    response = HttpResponse(mimetype='text/csv')
+    response['Content-Disposition'] = 'attachment; filename=data.csv'
+
+    writer = csv.writer(response)
+    writer.writerow([u'地址'.encode("gbk"), u'别名'.encode("gbk"), u'标签'.encode("gbk"), u'购买人数'.encode("gbk"), u'产品销售数量'.encode("gbk"), u'成交金额'.encode("gbk")])
+
+    if times:
+        start, end = times.split("/")
+    else:
+        start, end = None, None
+
+    ts = tags.split()
+    pds = Product.objects.all()
+    for tag in ts:
+        pds = pds.filter(tag__icontains=tag)
+
+    total_sum = [0, 0, 0]
+    for pd in pds:
+        pd.data = pd.get_data(start, end)
+        total_sum[0] += pd.data[0]
+        total_sum[1] += pd.data[1]
+        total_sum[2] += pd.data[2]
+
+        writer.writerow([ pd.url.encode("gbk"), pd.name.encode("gbk"), pd.tag.encode("gbk"), pd.data[0], pd.data[1], pd.data[2] ])
+
+    return response
 
 

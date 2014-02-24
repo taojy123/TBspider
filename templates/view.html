@@ -46,10 +46,16 @@
                 <input type="submit" class="pure-button pure-button-primary" name="submit" value="查询" />
             </form>
 
-            <label>
-                {{ tags }}
-                {{ times }}
-            </label>
+            {% if submit %}
+                <label>
+                    {{ tags }}
+                    {{ times }}
+                </label>
+
+                <a href="/load_view/?tags={{ tags }}&times={{ times }}">导出数据</a>
+            {% endif %}
+
+
 
             <table id="myTable" class="tablesorter" style="border-collapse: separate; border-spacing:1px;">
 
