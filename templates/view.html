@@ -41,8 +41,8 @@
         <div id="content" style="text-align: center;margin-top: 30px">
 
             <form action="/view/" class="pure-form" style="margin-bottom: 30px">
-                <input type="text" name="tags" placeholder="标签"/>
-                <input type="text" name="times" placeholder="2014-02-14/2014-02-15" />
+                <input type="text" name="tags" value="{{ tags }}" placeholder="标签"/>
+                <input type="text" name="times" value="{{ times }}" placeholder="2014-02-14/2014-02-15" />
                 <input type="submit" class="pure-button pure-button-primary" name="submit" value="查询" />
             </form>
 
@@ -52,7 +52,11 @@
                     {{ times }}
                 </label>
 
-                <a href="/load_view/?tags={{ tags }}&times={{ times }}">导出数据</a>
+                <form action="/load_view/">
+                    <input type="hidden" name="tags" value="{{ tags }}" />
+                    <input type="hidden" name="times" value="{{ times }}" />
+                    <input type="submit" value="导出数据" />
+                </form>
             {% endif %}
 
 
