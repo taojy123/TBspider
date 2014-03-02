@@ -64,3 +64,14 @@ class Sale(models.Model):
     price = models.FloatField(default=0)
     quantity = models.IntegerField(default=0)
     time = models.CharField(max_length=255, blank=True , null=True)
+
+
+
+class Info(models.Model):
+    product = models.ForeignKey(Product)
+    time = models.CharField(max_length=255, blank=True , null=True)
+    viewcount = models.IntegerField(default=0)
+    quanity = models.IntegerField(default=0)
+    confirm = models.IntegerField(default=0)
+
+

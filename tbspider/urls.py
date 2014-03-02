@@ -16,8 +16,10 @@ urlpatterns = patterns('',
     ('^index/$', index),
     ('^collect/$', collect),
     ('^view/$', view),
+    ('^info/$', info),
     ('^product/$', product),
     ('^load_view/$', load_view),
+    ('^load_info/$', load_info),
 )
 # This will work if DEBUG is True
 from django.contrib.staticfiles.urls import staticfiles_urlpatterns

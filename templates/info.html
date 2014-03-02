@@ -16,7 +16,7 @@
                 widgets: ['zebra']
             })
 
-            $("#view").addClass("pure-menu-selected")
+            $("#info").addClass("pure-menu-selected")
 
         })
         /*]]>*/
@@ -34,27 +34,24 @@
     <div id="right">
 
         <div class="header">
-            <h1>数据查询</h1>
+            <h1>集成信息</h1>
         </div>
 
 
         <div id="content" style="text-align: center;margin-top: 30px">
 
-            <form action="/view/" class="pure-form" style="margin-bottom: 30px">
+            <form action="/info/" class="pure-form" style="margin-bottom: 30px">
                 <input type="text" name="tags" value="{{ tags }}" placeholder="筛选标签"/>
-                <input type="text" name="times" value="{{ times }}" placeholder="2014-02-14/2014-02-15" />
                 <input type="submit" class="pure-button pure-button-primary" name="submit" value="查询" />
             </form>
 
             {% if submit %}
                 <label>
                     {{ tags }}
-                    {{ times }}
                 </label>
 
-                <form action="/load_view/">
+                <form action="/load_info/">
                     <input type="hidden" name="tags" value="{{ tags }}" />
-                    <input type="hidden" name="times" value="{{ times }}" />
                     <input type="submit" value="导出数据" />
                 </form>
             {% endif %}
@@ -68,55 +65,39 @@
                     <th>地址</th>
                     <th>别名</th>
                     <th>标签</th>
-                    <th>购买人数</th>
-                    <th>产品销售数量</th>
-                    <th>成交金额</th>
+                    <th>时间</th>
+                    <th>浏览量</th>
+                    <th>售出</th>
+                    <th>交易成功</th>
                 </tr>
                 </thead>
 
                 <tbody>
-                {% for pd in pds %}
+                {% for info in infos %}
                     <tr>
                         <td>
-                            {{ pd.url }}
+                            {{ info.product.url }}
                         </td>
                         <td>
-                            {{ pd.name }}
+                            {{ info.product.name }}
                         </td>
                         <td>
-                            {{ pd.tag }}
+                            {{ info.product.tag }}
                         </td>
                         <td>
-                            {{ pd.data.0 }}
+                            {{ info.time }}
                         </td>
                         <td>
-                            {{ pd.data.1 }}
+                            {{ info.viewcount }}
                         </td>
                         <td>
-                            {{ pd.data.2 }}
+                            {{ info.quanity }}
+                        </td>
+                        <td>
+                            {{ info.confirm }}
                         </td>
                     </tr>
                 {% endfor %}
-                    <tr>
-                        <td>
-                            总计:
-                        </td>
-                        <td>
-                            -
-                        </td>
-                        <td>
-                            -
-                        </td>
-                        <td>
-                            {{ total_sum.0 }}
-                        </td>
-                        <td>
-                            {{ total_sum.1 }}
-                        </td>
-                        <td>
-                            {{ total_sum.2 }}
-                        </td>
-                    </tr>
                 </tbody>
             </table>
 

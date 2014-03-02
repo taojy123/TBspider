@@ -10,6 +10,7 @@ import uuid
 import BeautifulSoup
 import time
 import csv
+import xlwt
 
 
 def index(request):
@@ -40,6 +41,32 @@ def collect(request):
                 pd.name = name
                 pd.tag = tag
                 pd.save()
+
+
+            nowtime = time.strftime('%Y-%m-%d %H:%M')
+
+            req = urllib2.Request(url)
+            req.add_header('Referer', 'http://www.taobao.com/')
+            p = urllib2.urlopen(req).read()
+
+            link = re.findall(r'"apiItemViews": "(.*?)",', p)[0]
+            p2 = urllib2.urlopen(link).read()
+            viewcount = int(re.findall(r':(.*?)}', p2)[0])
+
+            link = re.findall(r'"apiItemInfo":"(.*?)",', p)[0]
+            p3 = urllib2.urlopen(link).read()
+            quanity = int(re.findall(r'quanity:(.*?),', p3)[0])
+            confirm = int(re.findall(r'confirmGoods:(.*?),', p3)[0])
+
+            print name, nowtime, viewcount, quanity, confirm
+
+            info = Info()
+            info.product = pd
+            info.time = nowtime
+            info.viewcount = viewcount
+            info.quanity = quanity
+            info.confirm = confirm
+            info.save()
 
             collect_url = pd.collect_url()
             break_flag = False
@@ -83,6 +110,7 @@ def collect(request):
 
     if repeat:
         current_url = request.get_full_path()
+        print "waiting..."
         time.sleep(int(repeat) * 60)
         print "repeat"
         rp = HttpResponseRedirect(current_url)
@@ -122,6 +150,22 @@ def view(request):
 
 
 
+def info(request):
+    submit = request.REQUEST.get("submit")
+    tags = request.REQUEST.get("tags", "")
+    if submit:
+        ts = tags.split()
+        pds = Product.objects.all()
+        for tag in ts:
+            pds = pds.filter(tag__icontains=tag)
+
+        infos = []
+        for pd in pds:
+            infos += list(Info.objects.filter(product=pd).order_by("time"))
+
+    return render_to_response('info.html', locals())
+
+
 def product(request):
     submit = request.REQUEST.get("submit")
     name = request.REQUEST.get("name", "")
@@ -144,11 +188,10 @@ def load_view(request):
     tags = request.REQUEST.get("tags", "")
     times = request.REQUEST.get("times", "")
 
-    response = HttpResponse(mimetype='text/csv')
-    response['Content-Disposition'] = 'attachment; filename=data.csv'
+    response = HttpResponse(mimetype='application/xls')
+    response['Content-Disposition'] = 'attachment; filename=data.xls'
 
-    writer = csv.writer(response)
-    writer.writerow([u'地址'.encode("gbk"), u'别名'.encode("gbk"), u'标签'.encode("gbk"), u'购买人数'.encode("gbk"), u'产品销售数量'.encode("gbk"), u'成交金额'.encode("gbk")])
+    workBook = xlwt.Workbook()
 
     if times:
         start, end = times.split("/")
@@ -160,14 +203,68 @@ def load_view(request):
     for tag in ts:
         pds = pds.filter(tag__icontains=tag)
 
-    total_sum = [0, 0, 0]
     for pd in pds:
-        pd.data = pd.get_data(start, end)
-        total_sum[0] += pd.data[0]
-        total_sum[1] += pd.data[1]
-        total_sum[2] += pd.data[2]
+        sheet = workBook.add_sheet(pd.name + " ")
 
-        writer.writerow([ pd.url.encode("gbk"), pd.name.encode("gbk"), pd.tag.encode("gbk"), pd.data[0], pd.data[1], pd.data[2] ])
+        sheet.write(0, 0, u'商品')
+        sheet.write(0, 1, u'买家')
+        sheet.write(0, 2, u'拍下价格')
+        sheet.write(0, 3, u'数量')
+        sheet.write(0, 4, u'付款时间')
+
+        sales = pd.get_sales(start, end)
+        for i in range(len(sales)):
+            sale = sales[i]
+            sheet.write(i+1, 0, sale.product.name)
+            sheet.write(i+1, 1, sale.user)
+            sheet.write(i+1, 2, str(sale.price))
+            sheet.write(i+1, 3, str(sale.quantity))
+            sheet.write(i+1, 4, sale.time)
+
+    workBook.save(response)
+
+    return response
+
+
+
+def load_info(request):
+    tags = request.REQUEST.get("tags", "")
+
+    response = HttpResponse(mimetype='application/xls')
+    response['Content-Disposition'] = 'attachment; filename=info.xls'
+
+    workBook = xlwt.Workbook()
+
+    ts = tags.split()
+    pds = Product.objects.all()
+    for tag in ts:
+        pds = pds.filter(tag__icontains=tag)
+
+    infos = []
+    for pd in pds:
+
+        sheet = workBook.add_sheet(pd.name + " ")
+
+        sheet.write(0, 0, u'地址')
+        sheet.write(0, 1, u'别名')
+        sheet.write(0, 2, u'标签')
+        sheet.write(0, 3, u'时间')
+        sheet.write(0, 4, u'浏览量')
+        sheet.write(0, 5, u'售出')
+        sheet.write(0, 6, u'交易成功')
+
+        infos = Info.objects.filter(product=pd).order_by("time")
+        for i in range(len(infos)):
+            info = infos[i]
+            sheet.write(i+1, 0, info.product.url)
+            sheet.write(i+1, 1, info.product.name)
+            sheet.write(i+1, 2, info.product.tag)
+            sheet.write(i+1, 3, info.time)
+            sheet.write(i+1, 4, str(info.viewcount))
+            sheet.write(i+1, 5, str(info.quanity))
+            sheet.write(i+1, 6, str(info.confirm))
+
+    workBook.save(response)
 
     return response
 
