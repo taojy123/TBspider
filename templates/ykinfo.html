@@ -1,0 +1,121 @@
+﻿<!doctype html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+    <title>淘宝销量爬虫</title>
+    <link rel="stylesheet" href="/static/css/pure-min.css">
+    <link rel="stylesheet" href="/static/css/baby-blue.css">
+    <link rel="stylesheet" href="/static/css/tablesorter/blue/style.css" type="text/css" media="print, projection, screen" />
+    <script type="text/javascript" src="/static/js/jquery-1.4.3.min.js"></script>
+    <script type="text/javascript" src="/static/js/jquery.tablesorter.js"></script>
+    <script type="text/javascript">
+        /* <![CDATA[*/
+        $(function(){
+            //表格显示
+            $("#myTable").tablesorter({
+                widgets: ['zebra']
+            })
+
+            $("#ykinfo").addClass("pure-menu-selected")
+
+        })
+        /*]]>*/
+    </script>
+</head>
+
+<body>
+
+
+<div class="pure-g-r" id="layout" style="letter-spacing:0">
+
+    {% include "menu.html" %}
+
+
+    <div id="right">
+
+        <div class="header">
+            <h1>优酷信息</h1>
+        </div>
+
+
+        <div id="content" style="text-align: center;margin-top: 30px">
+
+            <form action="/ykinfo/" class="pure-form" style="margin-bottom: 30px">
+                <input type="text" name="tags" value="{{ tags }}" placeholder="筛选标签"/>
+                <input type="submit" class="pure-button pure-button-primary" name="submit" value="查询" />
+            </form>
+
+            {% if submit %}
+                <label>
+                    {{ tags }}
+                </label>
+
+                <form action="/load_ykinfo/">
+                    <input type="hidden" name="tags" value="{{ tags }}" />
+                    <input type="submit" value="导出数据" />
+                </form>
+            {% endif %}
+
+
+
+            <table id="myTable" class="tablesorter" style="border-collapse: separate; border-spacing:1px;">
+
+                <thead>
+                <tr>
+                    <th>地址</th>
+                    <th>别名</th>
+                    <th>标签</th>
+                    <th>时间</th>
+                    <th>播放数</th>
+                    <th>评论数</th>
+                    <th>顶</th>
+                    <th>踩</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                {% for info in infos %}
+                    <tr>
+                        <td>
+                            {{ info.url }}
+                        </td>
+                        <td>
+                            {{ info.name }}
+                        </td>
+                        <td>
+                            {{ info.tag }}
+                        </td>
+                        <td>
+                            {{ info.time }}
+                        </td>
+                        <td>
+                            {{ info.viewcount }}
+                        </td>
+                        <td>
+                            {{ info.total }}
+                        </td>
+                        <td>
+                            {{ info.ding }}
+                        </td>
+                        <td>
+                            {{ info.cai }}
+                        </td>
+                    </tr>
+                {% endfor %}
+                </tbody>
+            </table>
+
+
+
+        </div>
+
+    </div>
+
+
+</div>
+
+
+
+</body>
+
+</html>
