@@ -244,7 +244,8 @@ def load_view(request):
         pds = pds.filter(tag__icontains=tag)
 
     for pd in pds:
-        sheet = workBook.add_sheet(pd.name + " ")
+        name = pd.name.replace(u'[','').replace(u']','') + " "
+        sheet = workBook.add_sheet(name)
 
         sheet.write(0, 0, u'商品')
         sheet.write(0, 1, u'买家')
@@ -283,7 +284,8 @@ def load_info(request):
     infos = []
     for pd in pds:
 
-        sheet = workBook.add_sheet(pd.name + " ")
+        name = pd.name.replace(u'[','').replace(u']','') + " "
+        sheet = workBook.add_sheet(name)
 
         sheet.write(0, 0, u'地址')
         sheet.write(0, 1, u'别名')
@@ -328,7 +330,10 @@ def load_ykinfo(request):
     for info in infos:
         if info.url != turl:
             i = -1
-            sheet = workBook.add_sheet(info.name + " ")
+
+            name = info.name.replace(u'[','').replace(u']','') + " "
+            sheet = workBook.add_sheet(name)
+
             sheet.write(0, 0, u'地址')
             sheet.write(0, 1, u'别名')
             sheet.write(0, 2, u'标签')
